@@ -1,9 +1,9 @@
-# esm_anem.py — JAH Supplemental material(Appendix S1-S9, 본문 첫 인용 순서; S2 판정 대조 신설 2026-11-18) + STROBE(S9). 수치는 결과 CSV에서만. 이중 익명 → 저자 정보 없음, 미국식 철자.
+# esm_anem.py — JAH Supporting information(Appendix S1-S9, 본문 첫 인용 순서; S2 판정 대조 신설 2026-11-18) + STROBE(S9). 수치는 결과 CSV에서만. 이중 익명 → 저자 정보 없음, 미국식 철자.
 #  단일 익명이지만 보충 파일은 저자 정보 없이 제목만. 영국식 철자(TX._emit에서 brit 적용).
 import os, json, subprocess, pandas as pd
 from docx.shared import Cm
 import content_anem as C
-from build_jah_anem import LABEL, GROUPS, TX, TITLE as DTITLE, foot_row, EXPECT
+from build_ggi_anem import LABEL, GROUPS, TX, TITLE as DTITLE, foot_row, EXPECT
 from american import amer as brit
 HERE = os.path.dirname(os.path.abspath(__file__)); MSD = os.path.dirname(HERE); OUT = os.path.join(MSD, "out"); B = os.path.dirname(MSD); RS = os.path.join(B, "results_std3")
 N = C.N
@@ -11,7 +11,7 @@ f3 = lambda t: f"{t[0]:.3f} ({t[1]:.3f}–{t[2]:.3f})"
 B1 = "Intervals with a bound shown as 1.000 were classified from unrounded values."
 ROBV = [C.OLD, C.DM, C.NUT, C.UPT]
 SH = {C.OLD: "Living alone", C.DM: "Diagnosed diabetes", C.NUT: "Nutrition-label literacy", C.UPT: "Screening uptake"}
-J = TX(cite="ay")
+J = TX(cite="paren")
 _NB = [False]
 def TF(title, header, rows, foot="", fs=8, fixed=1, per=None):
     title = brit(title); header = [brit(h) for h in header]; rows = [[brit(x) for x in r] for r in rows]
@@ -26,7 +26,7 @@ def TF(title, header, rows, foot="", fs=8, fixed=1, per=None):
         rr = [r if r and r[0] == "__H__" else [r[c] for c in cols] for r in rows]
         (None if (_f and n == 0) else J.page_break()); J.table_fit(tt, [header[c] for c in cols], rr, "", fs_max=fs)
         if foot: foot_row(J, foot, 8, 12)
-J.para("<b>Supplemental material</b>"); J.para(f"Article title: {DTITLE}"); J.para("Journal: Journal of Aging and Health")
+J.para("<b>Supporting information</b>"); J.para(f"Article title: {DTITLE}"); J.para("Journal: Geriatrics & Gerontology International"); J.para("Author: Seongdae Kim, Department of Biohealth Convergence Open Sharing System, Hongik University, Seoul, Republic of Korea (kimsd@hongik.ac.kr)")
 J.para("Contents: Appendix S1 (supplementary methods); Appendix S2 (judgement criterion and reconciliation with the haemoglobin distribution); Appendix S3 (covariates); Appendix S4 (panel checks); Appendix S5 (persistence, Figure S1); Appendix S6 (windows and the COVID-19 period); Appendix S7 (robustness, comparison outcomes, negative controls and model checks); Appendix S8 (post hoc analyses); Appendix S9 (STROBE checklist).")
 _MT = pd.read_csv(os.path.join(B, "panel_META_ANEM_std3.csv"), encoding="utf-8-sig").set_index("variable")
 _imp = lambda v: int(_MT.loc[v, "n_imputed_interp"] + _MT.loc[v, "n_imputed_sgg_mean"] + _MT.loc[v, "n_imputed_year_mean"])

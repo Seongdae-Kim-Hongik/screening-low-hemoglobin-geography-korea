@@ -42,7 +42,7 @@ Run from the repository root (set `ST_DATA_ROOT` and `ST_FBDZIP_CORRECTED` to th
 | 5 | `85_window_maps.R`, `86_yearly_maps_ehsa.py` (with `86b_ehsa_modified_mk.py`), `87_window_grid.py` | Maps and emerging hot spot analysis |
 | 6 | `88g_sens_prep.py ANEM std3 INFECT,GCA`, `88g_sens_suite.R` (`GROUP=1..6`), `88h_ppc_varpart.R`, `88k_struct_kh.R` (nb, struct, review), `88k_struct_kh_anem.R` with `kh_constraints_anem.R` (kh), `89g_sens_combine.py` | Sensitivity analyses, comparison outcomes, Knorr-Held models, review outputs |
 | 7 | `99G_anem_judgement_gate.py` (KOSIS API key in `~/.kosis_key`), `81W_anem_stable_judgement.R ANEM` | Reconciliation of the flag with the hemoglobin distribution (`S0_judgement_*.csv`); principal model refitted to 2013-2017, 2018-2024 and 2013-2024 |
-| 8 | `04_분석/ANEM/MS/build/run_all_jah.sh` (`figs_anem.py`, `build_jah_anem.py`, `esm_anem.py`, `check_jah_anem.py`) | Manuscript (APA, American spelling), title page, supplemental material, figures and checks |
+| 8 | `04_분석/ANEM/MS/build/run_all.sh` (`figs_anem.py`, `build_ggi_anem.py`, `esm_anem.py`, `check_ggi_anem.py`) | Manuscript, supporting information, figures and checks |
 
 The boundary file is found at `data/boundary/final.shp` by default; set `ST_SHP` to use another path.
 

@@ -1,97 +1,49 @@
-# build_jah_anem.py — Journal of Aging and Health(Sage Track/ScholarOne) Original Article 조립(2026-11-18, 30호 ANEM).
-#  규정(journals.sagepub.com/author-instructions/JAH, 2026-11-18 열람): 이중 익명 → 제목면 별도 파일(저자·소속·교신·running head·AUTHOR'S NOTE·Statements and Declarations
-#   (Ethical considerations, Consent to participate, Consent for publication, Declaration of conflicting interest, Funding statement, Data availability)), 원고에는 저자 정보 없음,
-#   구조 초록 100-150단어, 키워드 3-5(초록 쪽), 초록 쪽과 본문 첫 쪽에 제목, 이중 간격, ≤30쪽(제목면·초록 제외, 표·그림·참고 포함), APA 참고문헌, EQUATOR 체크리스트, 그림 300 dpi.
-import os, re, json, unicodedata
+# build_ggi_anem.py — Geriatrics & Gerontology International(Wiley Research Exchange) Original Article 조립(2026-11-18, 30호 ANEM).
+#  규정(onlinelibrary.wiley.com/page/journal/14470594/homepage/forauthors.html, "Updated in September 2026", 2026-11-18 열람): 본문 ≤3,000(참고·표·그림 제외),
+#   구조 초록 Aim/Methods/Results/Conclusions ≤250, 키워드 ≤5, 표+그림 ≤5, 참고 제한 없음(Chicago Notes = 번호식), 소제목 Introduction·Methods·Results·Discussion·Acknowledgments·Disclosure Statement·References,
+#   본문 파일에 기여·감사(연구비 포함)·Funding·이해상충·자료·윤리·환자 동의·임상시험 등록·표·그림 범례, 제목 약어 금지, 제목면(저자·소속·교신 우편·이메일), 단일 익명, AI는 Methods, 그림·보충 별도 파일.
+import os, re, json
 from jkms_engine import JKMS
-from american import amer as brit   # 미국식 철자(APA)
+from american import amer as brit
 import content_anem as C
 HERE = os.path.dirname(os.path.abspath(__file__)); MS = os.path.dirname(HERE); OUT = os.path.join(MS, "out"); os.makedirs(OUT, exist_ok=True)
 N = C.N; REFS = json.load(open(os.path.join(HERE, "refs_anem.json"), encoding="utf-8"))
 rdf = lambda f, d: open(os.path.join(OUT, f)).read().strip() if os.path.exists(os.path.join(OUT, f)) else d
 ZENODO = rdf("zenodo_doi.txt", "10.5281/zenodo.PENDING"); GITHUB = rdf("github_url.txt", "https://github.com/PENDING")
-TAG = "JAH_ANEM"; TITLE = brit(C.TITLE)
+TAG = "GGI_ANEM"; TITLE = brit(C.TITLE)
 ORCID = "0000-0002-1525-0091"
 AFFIL = "Department of Biohealth Convergence Open Sharing System, Hongik University, Seoul, Republic of Korea"
 ADDR = "Department of Biohealth Convergence Open Sharing System, Hongik University, 94 Wausan-ro, Mapo-gu, Seoul 04066, Republic of Korea"
-FUNDING = "The author received no financial support for the research, authorship, and/or publication of this article."
-AI_STATEMENT = "The author used Claude (Anthropic) and ChatGPT (OpenAI) only for translation and English-language editing of the manuscript; the author takes full responsibility for the content."
-COI = "The author declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article."
-ETHICS = "The Institutional Review Board of Hongik University approved the study on November 4, 2025 (7002340-202511-HR-012) and its continuing review on November 3, 2026 (7002340-202611-HR-040). The study used only published aggregate statistics and was conducted in accordance with the Declaration of Helsinki."
-CONSENT = "Not applicable. The Institutional Review Board of Hongik University waived the requirement for informed consent because only published aggregate statistics were used and no individual was identifiable."
-PUBCONSENT = "Not applicable."
+FUNDING = "This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors."
+COI = "The author declares no conflict of interest."
+ETHICS = "The Institutional Review Board of Hongik University approved the study on November 4, 2025 (7002340-202511-HR-012) and its continuing review on November 3, 2026 (7002340-202611-HR-040)."
+AI_STATEMENT = "The author used Claude (Anthropic) and ChatGPT (OpenAI) only for translation and English-language editing of the manuscript."
 def data_statement():
     return ("The district statistics analyzed are publicly available from the Korean Statistical Information Service (https://kosis.kr) and the other official sources cited in the Methods. "
             "The processed district-year data are available from the author on reasonable request. "
             f"The analysis code that generates every number, table, and figure is openly available under the MIT license on Zenodo (https://doi.org/{ZENODO}) and GitHub ({GITHUB}); it contains code only.")
-
-def pandoc_cites(t): return re.sub(r"\s*\[(@[^\]]+)\]", lambda m: " {{" + ",".join(k.strip().lstrip("@") for k in m.group(1).split(";")) + "}}", t)
+def pandoc_cites(t): return re.sub(r"\s*\[(@[^\]]+)\]", lambda m: "{{" + ",".join(k.strip().lstrip("@") for k in m.group(1).split(";")) + "}}", t)
 def strip(t): return re.sub(r"\s*\[@[^\]]+\]", "", t)
 def all_keys():
     src = open(os.path.join(HERE, "content_anem.py"), encoding="utf-8").read()
     src = re.sub(r"(?m)^\s*#.*$", "", src)
     return sorted(k for k in {k.strip().lstrip("@") for g in re.findall(r"\[(@[^\]]+)\]", src) for k in g.split(";")} if re.fullmatch(r"(web:)?[a-z][a-z0-9]*", k))
 KEYS = all_keys()
-
-# ── APA 7 ──
-def is_group(a): return not re.search(r"\s[A-ZÀ-Ý]{1,4}$", a.strip())
-def surname(a): return a if is_group(a) else re.sub(r"\s+[A-ZÀ-Ý]{1,4}$", "", a.strip())
-def initials(a):
-    m = re.search(r"\s([A-ZÀ-Ý]{1,4})$", a.strip()); return " ".join(f"{c}." for c in m.group(1)) if m else ""
-def auths(k): r = REFS[k]; return [r["authors"]] if r["type"] == "web" else r["authors"]
-def base_label(k):
-    s = [surname(a) for a in auths(k)]
-    return s[0] if len(s) == 1 else (f"{s[0]} & {s[1]}" if len(s) == 2 else f"{s[0]} et al.")
-def _first_ini(k): a = auths(k)[0]; return "" if is_group(a) else initials(a) + " "
-def fold(x): return "".join(c for c in unicodedata.normalize("NFKD", x) if not unicodedata.combining(c)).lower()
-def list_sortkey(k): a = auths(k); return (fold(surname(a[0])), tuple(fold(surname(x)) for x in a[1:]), int(REFS[k]["year"]), REFS[k]["title"].lower())
-SUFFIX = {}; _g = {}
-for k in KEYS: _g.setdefault((base_label(k), int(REFS[k]["year"])), []).append(k)
-for ks in _g.values():
-    if len(ks) > 1:
-        for i, k in enumerate(sorted(ks, key=list_sortkey)): SUFFIX[k] = "abcdefgh"[i]
-def year_str(k): return f"{REFS[k]['year']}{SUFFIX.get(k, '')}"
-_sn = {}
-for k in KEYS: _sn.setdefault(fold(surname(auths(k)[0])), set()).add(auths(k)[0])
-def cite_label(k):   # APA 7: 같은 성, 다른 제1저자면 이니셜 붙임(M. Kim et al.)
-    return (_first_ini(k) if len(_sn[fold(surname(auths(k)[0]))]) > 1 else "") + base_label(k)
-def aylabel(k): return ((fold(base_label(k)), int(REFS[k]["year"]), SUFFIX.get(k, "")), f"{cite_label(k)}, {year_str(k)}")
-JFULL = {"The Lancet. Haematology": "The Lancet Haematology", "Lancet (London, England)": "The Lancet", "Epidemiology (Cambridge, Mass.)": "Epidemiology", "PloS one": "PLOS ONE",
-         "BMJ open": "BMJ Open", "JAMA": "JAMA", "BMC geriatrics": "BMC Geriatrics", "BMC public health": "BMC Public Health", "BMC endocrine disorders": "BMC Endocrine Disorders",
-         "Perspectives on psychological science : a journal of the Association for Psychological Science": "Perspectives on Psychological Science",
-         "Geriatrics & gerontology international": "Geriatrics & Gerontology International", "Alcoholism, clinical and experimental research": "Alcoholism: Clinical and Experimental Research",
-         "The American journal of medicine": "The American Journal of Medicine",
-         "Polit Sci Res Methods": "Political Science Research and Methods", "J R Stat Soc Series B Stat Methodol": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)", "Stat Sci": "Statistical Science"}
-SMALL = {"of", "and", "the", "in", "for", "on", "a", "an", "to", "&", "with"}
-def jtitle(j):
-    if j in JFULL: return JFULL[j]
-    w = re.sub(r"\s*[:=].*$", "", j).split()
-    return " ".join(x if (i and x.lower() in SMALL) else x[:1].upper() + x[1:] for i, x in enumerate(w))
-def apa_author(a): return a if is_group(a) else f"{surname(a)}, {initials(a)}"
-def ref(k):   # APA 7: Surname, I. I., Surname, I., & Surname, I. (Year). Title. <i>Journal</i>, <i>Vol</i>(Issue), pages. https://doi.org/...
+def ref(k):   # Wiley 번호식(GGI 게재 형식): 저자 3명 초과 → 3명 + et al. Title. Journal Year; Vol: first–last.
     r = REFS[k]
-    if r["type"] == "web": return f"{r['authors']}. ({year_str(k)}). <i>{r['title'].rstrip('.')}</i>. Retrieved {r['accessed_us']}, from {r['url']}"
-    au = [apa_author(a) for a in r["authors"]]
-    if len(au) > 20: au = au[:19] + ["... " + au[-1]]
-    a = au[0] if len(au) == 1 else (f"{au[0]}, & {au[1]}" if len(au) == 2 else ", ".join(au[:-1]) + ", & " + au[-1])
-    t = r["title"].rstrip("."); t = t + ("" if t.endswith(("?", "!")) else ".")
-    t = re.sub(r"([:?]\s+)([a-z])", lambda m: m.group(1) + m.group(2).upper(), t)   # APA: 쌍점 뒤 첫 글자 대문자
-    s = f"{a}{'.' if len(au) == 1 and is_group(r['authors'][0]) else ''} ({year_str(k)}). {t} <i>{jtitle(r.get('journal_full') or r['journal'])}</i>"
-    if r.get("vol"): s += f", <i>{r['vol']}</i>"
-    if r.get("issue"): s += f"({r['issue']})"
-    if r.get("pages"): s += f", {str(r['pages']).replace('-', chr(8211))}"
-    s += "."
-    if r.get("doi"): s += f" https://doi.org/{r['doi']}"
-    return s
-for _k, _r in REFS.items():
-    if _r["type"] == "web":
-        import datetime; _d = datetime.datetime.strptime(_r["accessed"], "%d %B %Y"); _r["accessed_us"] = _d.strftime("%B %-d, %Y")
+    if r["type"] == "web": return f"{r['authors']}. {r['title']}. {r['year']}. Available from: {r['url']} (accessed {r['accessed']})."
+    au = r["authors"]; a = ", ".join(au) if len(au) <= 3 else ", ".join(au[:3]) + " et al"
+    t = r["title"].rstrip("."); s = f"{a}. {t}{'' if t.endswith(('?', '!')) else '.'} {r['journal']} {r['year']}"
+    if r.get("vol"): s += f"; {r['vol']}"
+    if r.get("pages"): s += f": {str(r['pages']).rstrip('.').replace('-', chr(8211))}"
+    if not r.get("vol") and r.get("doi"): s += f". doi:{r['doi']}"
+    return s + "."
 
 class TX(JKMS):
     raw = False
-    def aylabel(self, k): return aylabel(k)
     def _emit(self, p, text, sz=12, bold=False, italic=False):
         if not self.raw:
+            text = re.sub(r"(\{\{[^}]+\}\})([.,;:])", r"\2\1", text)   # 위첨자는 문장부호 뒤
             text = brit(text); text = re.sub(r"(^|[\s(=])-(?=\d)", "\\1\u2212", text)
         return super()._emit(p, text, sz, bold, italic)
     def head(self, text, level=1):
@@ -186,29 +138,18 @@ def counts():
     bw = sum(len(h.split()) + sum(len(strip(t).split()) for t in ts) for h, ts in secs)
     return aw, bw
 
-def title_page():
-    aw, bw = counts()
-    J = TX(cite="ay")
-    J.para(f"<b>{TITLE}</b>")
-    J.para(f"Running head: {brit(C.RUNNING)}")
-    J.para("Seongdae Kim, PhD", before=12); J.para(AFFIL)
-    J.para(f"<b>Corresponding author:</b> Seongdae Kim, {ADDR}. Phone: +82-2-320-1114. Email: kimsd@hongik.ac.kr. ORCID: {ORCID}")
-    J.para(f"<b>Word counts:</b> abstract {aw}; main text {bw:,}. <b>Tables:</b> 2. <b>Figures:</b> 3. <b>References:</b> {len(KEYS)}.", before=6)
-    J.head("AUTHOR'S NOTE", 1); J.para(f"Acknowledgments: None. {AI_STATEMENT}")
-    J.head("Statements and Declarations", 1)
-    for h, t in (("Ethical considerations", ETHICS), ("Consent to participate", CONSENT), ("Consent for publication", PUBCONSENT),
-                 ("Declaration of conflicting interest", COI), ("Funding statement", FUNDING), ("Data availability", data_statement())):
-        J.head(h, 2); J.para(t)
-    J.doc_title = TITLE; p = os.path.join(OUT, f"TitlePage_{TAG}.docx"); J.save(p); return p
-
 def build():
     aw, bw = counts(); nref = len(KEYS)
-    J = TX(cite="ay")
+    J = TX(cite="sup")
     J.para(f"<b>{TITLE}</b>")
-    J.head("Abstract", 1)
+    J.para(f"<b>Short title:</b> {brit(C.RUNNING)}")
+    J.para("Seongdae Kim, PhD", before=12); J.para(AFFIL)
+    J.para(f"<b>Correspondence:</b> Seongdae Kim, {ADDR}. Email: kimsd@hongik.ac.kr. ORCID: {ORCID}")
+    J.para(f"<b>Word count:</b> abstract {aw}; main text {bw:,}. <b>Tables:</b> 2. <b>Figures:</b> 3. <b>References:</b> {nref}.")
+    J.page_break(); J.head("Abstract", 1)
     for h, t in C.ABSTRACT.items(): J.para(f"<b>{h}:</b> {t}")
-    J.raw = True; J.para(f"<b>Keywords:</b> {', '.join(C.KEYWORDS)}", before=6); J.raw = False
-    J.page_break(); J.para(f"<b>{TITLE}</b>"); J.counting = True
+    J.raw = True; J.para(f"<b>Keywords:</b> {'; '.join(C.KEYWORDS)}", before=6); J.raw = False
+    J.page_break(); J.counting = True
     J.head("Introduction", 1)
     for p in C.INTRO: J.para(pandoc_cites(p), indent=True)
     J.head("Methods", 1)
@@ -217,28 +158,33 @@ def build():
     for h, p in C.RESULTS: J.head(h, 2); J.para(pandoc_cites(p), indent=True)
     J.head("Discussion", 1)
     for p in C.DISCUSSION:
-        if p.startswith("### Conclusion"): J.head("Conclusion", 1); continue
+        if p.startswith("### Conclusion"): J.head("Conclusion", 2); continue
         if p.startswith("### "): J.head(p[4:].strip(), 2); continue
         J.para(pandoc_cites(p), indent=True)
     J.counting = False
+    J.head("Author Contributions", 1); J.para("Seongdae Kim conceived and designed the study, assembled and checked the data, performed the analysis, interpreted the results, wrote the manuscript, and approved the final version.")
+    J.head("Acknowledgments", 1); J.para(f"None. {FUNDING}")
+    J.head("Funding Statement", 1); J.para(FUNDING)
+    J.head("Disclosure Statement", 1); J.para(COI)
+    J.head("Data Availability Statement", 1); J.para(data_statement())
+    J.head("Ethics Approval Statement", 1); J.para(ETHICS + " The study used only published aggregate statistics and was conducted in accordance with the Declaration of Helsinki.")
+    J.head("Patient Consent Statement", 1); J.para("Not applicable; the Institutional Review Board waived informed consent because only published aggregate statistics were analyzed and no individual was identifiable.")
+    J.head("Clinical Trial Registration", 1); J.para("Not applicable.")
     assert sorted(J.cites) == KEYS, (set(J.cites) ^ set(KEYS))
     J.page_break(); J.head("References", 1); J.raw = True
-    for k in sorted(KEYS, key=list_sortkey): J.para(ref(k), indent=False)
+    for i, k in enumerate(J.cites, 1): J.para(f"{i}. " + ref(k))
     J.raw = False
     J.page_break(); put_table(J, table1()); J.new_page("landscape"); put_table(J, table2(), fs=8); tight(J.doc.tables[-1], 8)
-    J.new_page("portrait"); J.head("Figure Captions", 1)
+    J.new_page("portrait"); J.head("Figure Legends", 1)
     for k in sorted(FIGCAP): J.para(f"<b>Figure {k}.</b> {FIGCAP[k]}")
-    J.head("Supplemental Material", 1)
-    J.para("The supplemental material file contains the following appendices:")
+    J.head("Supporting Information", 1)
+    J.para("Additional supporting information may be found in the online version of this article:")
     for a_ in APPX: J.para(a_)
     return J, aw, bw, nref
 
 if __name__ == "__main__":
-    title_page()
     J, aw, bw, nref = build()
-    assert aw <= 150, aw
+    assert aw <= 250, aw; assert bw <= 3000, bw; assert len(C.KEYWORDS) <= 5
     p = os.path.join(OUT, f"Manuscript_{TAG}.docx"); J.doc_title = TITLE; J.save(p)
-    from docx import Document   # 이중 익명: 원고 파일 속성에서 저자 제거
-    d = Document(p); d.core_properties.author = ""; d.core_properties.last_modified_by = ""; d.save(p)
-    open(os.path.join(OUT, "wordcount_jah.txt"), "w").write(f"body_words={bw}\nabstract_words={aw}\nrefs={nref}\ntables=2\nfigures=3\n")
+    open(os.path.join(OUT, "wordcount_ggi.txt"), "w").write(f"body_words={bw}\nabstract_words={aw}\nrefs={nref}\ntables=2\nfigures=3\n")
     print(f"body {bw} | abstract {aw} | refs {nref}")
