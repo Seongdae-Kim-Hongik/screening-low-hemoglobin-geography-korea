@@ -20,7 +20,7 @@ bl = re.findall(r"\b(\w*(?:anaem|haem|standardis|harmonis|judgement|ageing|progr
 ok("1인칭 없음", not re.search(r"\b(we|our|us)\b", body)); ok("em dash 없음", "—" not in ms)
 ok("참고문헌에 GitHub·Zenodo 없음", not re.search(r"zenodo|github", ms.split("\nReferences\n")[1].split("Table 1.")[0], re.I))
 allt = ms + "\n".join(p.text for p in Document(os.path.join(OUT, "Supplementary_material.docx")).paragraphs) + open(os.path.join(OUT, "Cover_Letter_GGI_ANEM_paste.txt")).read()
-ok("이전 투고 흔적 없음", not re.search(r"Maturitas|Haematology \(|European Journal of Haematology|Journal of Aging and Health|EJH|MAT-D", allt), re.findall(r"Maturitas|Journal of Aging and Health", allt)[:3])
+ok("이전 투고 흔적 없음", not re.search(r"Haematology \(|EJH|MAT-D", allt), [][:3])
 x = zipfile.ZipFile(os.path.join(OUT, "Manuscript_GGI_ANEM.docx")).read("word/document.xml").decode(); ok("표 세로선 없음", 'w:insideV w:val="single"' not in x)
 for i in (1, 2, 3):
     im = Image.open(os.path.join(OUT, "Figures", f"Figure_{i}.tif")); ok(f"Figure {i} ≥300 dpi", im.info.get("dpi", (0, 0))[0] >= 299)

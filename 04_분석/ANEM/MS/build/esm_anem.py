@@ -1,4 +1,4 @@
-# esm_anem.py — JAH Supporting information(Appendix S1-S9, 본문 첫 인용 순서; S2 판정 대조 신설 2026-11-18) + STROBE(S9). 수치는 결과 CSV에서만. 이중 익명 → 저자 정보 없음, 미국식 철자.
+# esm_anem.py — Supporting information(Appendix S1-S9, 본문 첫 인용 순서; S2 판정 대조) + STROBE(S9). 수치는 결과 CSV에서만. 미국식 철자.
 #  단일 익명이지만 보충 파일은 저자 정보 없이 제목만. 영국식 철자(TX._emit에서 brit 적용).
 import os, json, subprocess, pandas as pd
 from docx.shared import Cm

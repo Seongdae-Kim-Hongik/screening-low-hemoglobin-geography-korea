@@ -4,7 +4,7 @@ Analysis code for the manuscript
 
 > *Where in Korea does national health screening find more low hemoglobin than expected, and what accompanies it?*
 
-Archived version: Zenodo, https://doi.org/10.5281/zenodo.24332277 (v1.0.0).
+Archived version: Zenodo, https://doi.org/10.5281/zenodo.24333234 (v1.0.1).
 
 This repository is public under the MIT licence.
 

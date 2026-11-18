@@ -1,4 +1,4 @@
-# american.py — JAH(Sage, APA) 미국식 철자: british.py 사전을 거꾸로 적용(본문·표·범례 출력 직전, 참고문헌 서지는 원문 유지). 2026-11-18.
+# american.py — 미국식 철자: british.py 사전을 거꾸로 적용(본문·표·범례 출력 직전, 참고문헌 서지는 원문 유지). 2026-11-18.
 import re
 from british import STEMS, WORDS
 INV = {v: k for k, v in WORDS.items()}
