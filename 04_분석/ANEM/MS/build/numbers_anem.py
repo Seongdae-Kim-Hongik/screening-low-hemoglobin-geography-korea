@@ -120,7 +120,8 @@ def load():
     jn = rd("S0_judgement_national.csv"); jp = rd("S0_judgement_province.csv")
     N["jn"] = {(int(r.year), r.sex): r._asdict() for r in jn.itertuples()}
     rg = lambda sx, y0, y1: (float(jn[(jn.sex == sx) & jn.year.between(y0, y1)].ratio_suspected.min()), float(jn[(jn.sex == sx) & jn.year.between(y0, y1)].ratio_suspected.max()))
-    N["jr"] = {"M_1112": rg("M", 2011, 2012), "M_1317": rg("M", 2013, 2017), "M_1824": rg("M", 2018, 2024), "F_1117": rg("F", 2011, 2017), "F_1824": rg("F", 2018, 2024)}
+    N["jr"] = {"M_1112": rg("M", 2011, 2012), "M_1317": rg("M", 2013, 2017), "M_1824": rg("M", 2018, 2024), "F_1117": rg("F", 2011, 2017), "F_1824": rg("F", 2018, 2024),
+                "M_1314": rg("M", 2013, 2014), "M_1517": rg("M", 2015, 2017), "F_1114": rg("F", 2011, 2014), "F_1517": rg("F", 2015, 2017)}
     N["jcv_max"] = float(jp.ratio_cv.max()); N["jcv_min"] = float(jp.ratio_cv.min())
     N["jr_M"] = (float(jp[jp.sex == "M"].r_flag_vs_hb.min()), float(jp[jp.sex == "M"].r_flag_vs_hb.max())); N["jr_F"] = (float(jp[jp.sex == "F"].r_flag_vs_hb.min()), float(jp[jp.sex == "F"].r_flag_vs_hb.max()))
     N["hb1617"] = {sx: (N["jn"][(2016, sx)]["pct_hb_below"], N["jn"][(2017, sx)]["pct_hb_below"], N["jn"][(2016, sx)]["ratio_suspected"], N["jn"][(2017, sx)]["ratio_suspected"]) for sx in ("M", "F")}

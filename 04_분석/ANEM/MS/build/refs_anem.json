@@ -872,7 +872,7 @@
  "web:kosis2026screening": {
   "type": "web",
   "authors": "National Health Insurance Service",
-  "title": "National health screening statistics: general health screening judgement by administrative district (DT_35007_N098, DT_35007_N103) and by sex and age group (DT_35007_N099, DT_35007_N104), 2011-2024. Korean Statistical Information Service",
+  "title": "National health screening statistics: general health screening judgment by administrative district (DT_35007_N098, DT_35007_N103) and by sex and age group (DT_35007_N099, DT_35007_N104), 2011-2024. Korean Statistical Information Service",
   "url": "https://kosis.kr",
   "year": 2026,
   "accessed": "11 November 2026"
@@ -904,7 +904,7 @@
  "web:kosis2026hb": {
   "type": "web",
   "authors": "National Health Insurance Service",
-  "title": "National health screening statistics: distribution of haemoglobin at general health screening by province and sex (DT_35007_N066) and by sex and age group (DT_35007_N067), 2010-2024. Korean Statistical Information Service",
+  "title": "National health screening statistics: distribution of hemoglobin at general health screening by province and sex (DT_35007_N066) and by sex and age group (DT_35007_N067), 2010-2024. Korean Statistical Information Service",
   "url": "https://kosis.kr",
   "year": 2026,
   "accessed": "18 November 2026"

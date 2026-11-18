@@ -42,6 +42,7 @@ def auths(k): r = REFS[k]; return [r["authors"]] if r["type"] == "web" else r["a
 def base_label(k):
     s = [surname(a) for a in auths(k)]
     return s[0] if len(s) == 1 else (f"{s[0]} & {s[1]}" if len(s) == 2 else f"{s[0]} et al.")
+def _first_ini(k): a = auths(k)[0]; return "" if is_group(a) else initials(a) + " "
 def fold(x): return "".join(c for c in unicodedata.normalize("NFKD", x) if not unicodedata.combining(c)).lower()
 def list_sortkey(k): a = auths(k); return (fold(surname(a[0])), tuple(fold(surname(x)) for x in a[1:]), int(REFS[k]["year"]), REFS[k]["title"].lower())
 SUFFIX = {}; _g = {}
@@ -50,7 +51,11 @@ for ks in _g.values():
     if len(ks) > 1:
         for i, k in enumerate(sorted(ks, key=list_sortkey)): SUFFIX[k] = "abcdefgh"[i]
 def year_str(k): return f"{REFS[k]['year']}{SUFFIX.get(k, '')}"
-def aylabel(k): return ((fold(base_label(k)), int(REFS[k]["year"]), SUFFIX.get(k, "")), f"{base_label(k)}, {year_str(k)}")
+_sn = {}
+for k in KEYS: _sn.setdefault(fold(surname(auths(k)[0])), set()).add(auths(k)[0])
+def cite_label(k):   # APA 7: 같은 성, 다른 제1저자면 이니셜 붙임(M. Kim et al.)
+    return (_first_ini(k) if len(_sn[fold(surname(auths(k)[0]))]) > 1 else "") + base_label(k)
+def aylabel(k): return ((fold(base_label(k)), int(REFS[k]["year"]), SUFFIX.get(k, "")), f"{cite_label(k)}, {year_str(k)}")
 JFULL = {"The Lancet. Haematology": "The Lancet Haematology", "Lancet (London, England)": "The Lancet", "Epidemiology (Cambridge, Mass.)": "Epidemiology", "PloS one": "PLOS ONE",
          "BMJ open": "BMJ Open", "JAMA": "JAMA", "BMC geriatrics": "BMC Geriatrics", "BMC public health": "BMC Public Health", "BMC endocrine disorders": "BMC Endocrine Disorders",
          "Perspectives on psychological science : a journal of the Association for Psychological Science": "Perspectives on Psychological Science",
@@ -70,6 +75,7 @@ def ref(k):   # APA 7: Surname, I. I., Surname, I., & Surname, I. (Year). Title.
     if len(au) > 20: au = au[:19] + ["... " + au[-1]]
     a = au[0] if len(au) == 1 else (f"{au[0]}, & {au[1]}" if len(au) == 2 else ", ".join(au[:-1]) + ", & " + au[-1])
     t = r["title"].rstrip("."); t = t + ("" if t.endswith(("?", "!")) else ".")
+    t = re.sub(r"([:?]\s+)([a-z])", lambda m: m.group(1) + m.group(2).upper(), t)   # APA: 쌍점 뒤 첫 글자 대문자
     s = f"{a}{'.' if len(au) == 1 and is_group(r['authors'][0]) else ''} ({year_str(k)}). {t} <i>{jtitle(r.get('journal_full') or r['journal'])}</i>"
     if r.get("vol"): s += f", <i>{r['vol']}</i>"
     if r.get("issue"): s += f"({r['issue']})"

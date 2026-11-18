@@ -3,7 +3,7 @@ import os, re, subprocess, zipfile, json
 from docx import Document
 from PIL import Image
 import content_anem as C
-from build_jah_anem import KEYS, REFS, base_label, year_str, list_sortkey, TITLE
+from build_jah_anem import KEYS, REFS, cite_label as base_label, year_str, list_sortkey, TITLE
 HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(os.path.dirname(HERE), "out"); R = []
 def ok(name, cond, info=""): R.append((("PASS" if cond else "FAIL"), name, info))
 def text(p): d = Document(p); return "\n".join(x.text for x in d.paragraphs) + "\n" + "\n".join(c.text for t in d.tables for r in t.rows for c in r.cells), d
@@ -16,7 +16,7 @@ aw = sum(len(t.split()) for t in C.ABSTRACT.values()) + len(C.ABSTRACT); ok("초
 ok("제목 쌍점·시리즈 틀 없음", ":" not in TITLE and "229" not in TITLE and "standardi" not in TITLE.lower())
 # APA 대응: 본문 괄호 인용 라벨이 모두 참고문헌에 있고, 참고문헌 항목이 모두 인용됨
 body = ms.split("\nReferences\n")[0]; refs = ms.split("\nReferences\n")[1].split("\nTable 1.")[0]
-cited = set(re.findall(r"((?:von )?[A-Z][^();]*?(?: et al\.| & [A-Z][\w-]+)?), (\d{4}[a-z]?)", " ".join(re.findall(r"\(([^()]*\d{4}[a-z]?)\)", body))))
+cited = set(re.findall(r"((?:von |[A-Z]\. (?:[A-Z]\. )?)?[A-Z][^();]*?(?: et al\.| & [A-Z][\w-]+)?), (\d{4}[a-z]?)", " ".join(re.findall(r"\(([^()]*\d{4}[a-z]?)\)", body))))
 labels = {(base_label(k), year_str(k)) for k in KEYS}
 ok("본문 인용 ⊂ 참고문헌", cited <= labels, cited - labels); ok("참고문헌 = 인용(키 수)", len(labels) == len(KEYS) and labels <= cited, labels - cited)
 rl = [l for l in refs.split("\n") if l.strip()]; ok("참고문헌 수 = 키 수", len(rl) == len(KEYS), (len(rl), len(KEYS)))
