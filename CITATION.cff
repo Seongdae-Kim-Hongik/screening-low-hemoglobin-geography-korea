@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "Where in Korea does national health screening find more low hemoglobin than expected, and what accompanies it? Analysis code"
+authors:
+  - family-names: Kim
+    given-names: Seongdae
+    affiliation: Hongik University
+    orcid: "https://orcid.org/0000-0002-1525-0091"
+version: "1.0.0"
+date-released: 2026-11-18
+license: MIT
+repository-code: "https://github.com/Seongdae-Kim-Hongik/screening-low-hemoglobin-geography-korea"
+doi: 10.5281/zenodo.24332277

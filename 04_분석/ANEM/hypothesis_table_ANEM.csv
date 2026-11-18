@@ -1,0 +1,9 @@
+﻿column,label_en,label_ko
+chk__anem_cases,Screen-detected suspected anaemia,검진 빈혈증 질환의심 인원
+chk__anem_examinees,General health screening examinees,일반건강검진 판정 수검자
+ext__nutrition_label_literacy,Nutrition-label literacy (SR %),영양표시 독해율(표준화)
+ext__food_security_rate,"Food-security rate (SR %, time-invariant)","식품안정성 확보율(표준화, 시간 불변)"
+ext__unmet_need_rate,Unmet medical need rate (SR %),미충족의료율(표준화)
+ext__total_fertility_rate,Total fertility rate,합계출산율
+ext__dx_dm_share,Screening diagnosed-diabetes share (%),검진 당뇨 유질환자 비율
+ext__kidney_suspect_share,Screening kidney-disease-suspected share (%),검진 신장질환 질환의심 비율

@@ -1,0 +1,219 @@
+{
+ "tag": "ANEM",
+ "outcome_column": "chk__anem_cases",
+ "outcome_label_en": "People classified as suspected anaemia at the National General Health Screening (haemoglobin below the screening cut-off; NHIS health screening statistics, annual)",
+ "disease_en": "Screen-detected suspected anaemia",
+ "disease_ko": "검진 빈혈증 질환의심",
+ "outcome_note": "DT_35007_N103 '일반_빈혈증', 2011-2024, 분모 = 판정 수검자(DT_35007_N098 계), 세종 2012-23 미관측 · 결과 열은 99A2가 N103 시군구 성별 행을 직접 합한 값(MASTER·기준 SQLite 빈칸 7칸: 부천 2016, 용인·창원·천안 2011-12; 나머지 칸은 SQLite와 차이 0)",
+ "offset": "chk__anem_examinees",
+ "exclude_years": [],
+ "forced": [
+  "eloc__DT_1YL20421E__1인당도시지역면적현황__도시지역인구",
+  "eloc__DT_1YL20981__인구천명당의료기관종사의사수＜br＞(A÷B×1000)",
+  "eloc__DT_1YL20701__남녀성비＜br＞(A÷B×100)",
+  "eloc__DT_1YL20891__재정자주도(세입과목개편전)"
+ ],
+ "negative_controls": [
+  "eloc__DT_1YL13901__뺑소니교통사고율＜br＞(A÷B×100)",
+  "eloc__DT_1YL21081__주민만명당화재발생건수＜br＞(A÷B×10000)",
+  "eloc__DT_1YL21311__생활계폐기물재활용률＜br＞(A÷B×100)"
+ ],
+ "offset_E_column": "E_std",
+ "offset_E_file": "ANEM_Estd3.csv",
+ "offset_E_label": "sex- and age-standardised E (2 sexes x 15 age bands to 85+, national screening-based anaemia-suspicion rates DT_35007_N104 00307/N099; district examinee age structure approximated from resident population x national uptake, sex totals observed)",
+ "offset_E_sensitivity_column": "E_pop",
+ "offset_E_label_sensitivity": "population-denominator sex- and age-standardised E (screening-selection sensitivity)",
+ "graph": "593-edge contact graph (ARTH 복사), ST_GRAPH=04_분석/ANEM/graph_593.graph",
+ "population_override": [
+  {
+   "year": 2023,
+   "fbd_region": "경상남도창원시",
+   "population": 1009038,
+   "source": "KOSIS DT_1YL20651E 2023 통합창원시 계; FBD_DATA_ZIP/2023.csv 창원 블록이 2022값 복사(유방암 11/4 population_final_audit)"
+  }
+ ],
+ "sensitivity_only_extra": [
+  "ext__unmet_need_rate",
+  "ext__food_security_rate",
+  "ext__kidney_suspect_share"
+ ],
+ "version": "s2 (80+ 비율 강제통제 없음)",
+ "fixed_on": "2026-11-11 (공변량 모형 적합 전 고정. 런북 15 6-B를 처음부터 적용: 풀은 빈혈 역학(영양·박탈, 여성·출산, 만성질환, 생활습관, 진단 접근·검진 선택) 중심, 신체활동은 생활습관 축의 두 지표. 공간 선별은 강제통제만 BYM2, 공변량 결과 미열람)",
+ "sets": {
+  "S1_narrative_full": [
+   "ext__basic_livelihood_rate",
+   "ext__tertiary_educated_share",
+   "ext__nutrition_label_literacy",
+   "eloc__DT_1YL12701__독거노인가구비율＜br＞(A÷B×100)",
+   "eloc__INH_1BB0002__다문화혼인비중(%)",
+   "ext__total_fertility_rate",
+   "ext__dx_dm_share",
+   "kchs__DT_H_SM__SR",
+   "kchs__DT_117075_H_DR_HIGH_WH__SR",
+   "kchs__DT_H_EX_WALK__SR",
+   "kchs__DT_H_EX_PHY__SR",
+   "ext__im_specialists_per100k",
+   "chk__수검률"
+  ],
+  "S2_nutrition_deprivation": [
+   "ext__basic_livelihood_rate",
+   "ext__tertiary_educated_share",
+   "ext__nutrition_label_literacy",
+   "eloc__DT_1YL12701__독거노인가구비율＜br＞(A÷B×100)"
+  ],
+  "S3_women_chronic": [
+   "eloc__INH_1BB0002__다문화혼인비중(%)",
+   "ext__total_fertility_rate",
+   "ext__dx_dm_share"
+  ],
+  "S4_lifestyle_pa": [
+   "kchs__DT_H_SM__SR",
+   "kchs__DT_117075_H_DR_HIGH_WH__SR",
+   "kchs__DT_H_EX_WALK__SR",
+   "kchs__DT_H_EX_PHY__SR"
+  ],
+  "S5_access_selection": [
+   "ext__im_specialists_per100k",
+   "chk__수검률"
+  ],
+  "S6_core": [
+   "ext__basic_livelihood_rate",
+   "eloc__INH_1BB0002__다문화혼인비중(%)",
+   "ext__dx_dm_share",
+   "kchs__DT_H_SM__SR",
+   "kchs__DT_H_EX_WALK__SR",
+   "chk__수검률"
+  ]
+ },
+ "transform": {
+  "eloc__DT_1YL20421E__1인당도시지역면적현황__도시지역인구": "share_of_pop(도시지역인구÷population(마스터))",
+  "eloc__DT_1YL20981__인구천명당의료기관종사의사수＜br＞(A÷B×1000)": "none",
+  "eloc__DT_1YL20701__남녀성비＜br＞(A÷B×100)": "none",
+  "eloc__DT_1YL20891__재정자주도(세입과목개편전)": "none",
+  "ext__pop80_share": "none",
+  "eloc__DT_1YL13901__뺑소니교통사고율＜br＞(A÷B×100)": "none",
+  "eloc__DT_1YL21081__주민만명당화재발생건수＜br＞(A÷B×10000)": "none",
+  "eloc__DT_1YL21311__생활계폐기물재활용률＜br＞(A÷B×100)": "none",
+  "ext__basic_livelihood_rate": "none",
+  "ext__tertiary_educated_share": "none",
+  "ext__nutrition_label_literacy": "none",
+  "eloc__DT_1YL12701__독거노인가구비율＜br＞(A÷B×100)": "none",
+  "eloc__INH_1BB0002__다문화혼인비중(%)": "none",
+  "ext__total_fertility_rate": "none",
+  "ext__dx_dm_share": "none",
+  "kchs__DT_H_SM__SR": "none",
+  "kchs__DT_117075_H_DR_HIGH_WH__SR": "none",
+  "kchs__DT_H_EX_WALK__SR": "none",
+  "kchs__DT_H_EX_PHY__SR": "none",
+  "ext__im_specialists_per100k": "log1p",
+  "chk__수검률": "none",
+  "ext__unmet_need_rate": "none",
+  "ext__food_security_rate": "none",
+  "ext__kidney_suspect_share": "none"
+ },
+ "expected_direction": {
+  "ext__basic_livelihood_rate": "+ (기초생활 수급률: 박탈·식품 불안정 → 철·엽산·B12 섭취 부족, 저소득층 빈혈 유병 높음)",
+  "ext__tertiary_educated_share": "- (대졸 이상 비율: 건강 문해·식이 질 → 빈혈 낮음)",
+  "ext__nutrition_label_literacy": "- (영양표시 독해율: 영양 문해·식품 선택 → 철 결핍 위험 낮음)",
+  "eloc__DT_1YL12701__독거노인가구비율＜br＞(A÷B×100)": "+ (독거노인 가구: 노인 영양 위험·단백질·철 섭취 부족)",
+  "eloc__INH_1BB0002__다문화혼인비중(%)": "+ (다문화 혼인 비중: 동남아 출신 결혼이민 여성의 철 결핍·지중해빈혈 보인자 → 빈혈 의심 높음)",
+  "ext__total_fertility_rate": "+ (합계출산율: 임신·출산·수유로 철 저장 고갈 → 가임기 여성 빈혈)",
+  "ext__dx_dm_share": "+ (검진 당뇨 유질환자 비율: 당뇨병성 만성콩팥병·염증 빈혈·메트포르민 B12 결핍)",
+  "kchs__DT_H_SM__SR": "- (현재흡연율: 일산화탄소혈색소 보상으로 혈색소가 올라가 빈혈이 가려짐 → 의심 판정 적음)",
+  "kchs__DT_117075_H_DR_HIGH_WH__SR": "+ (고위험음주: 엽산 결핍·위장관 출혈·골수 억제)",
+  "kchs__DT_H_EX_WALK__SR": "- (걷기 실천: 전반적 건강·식이 질·만성질환 감소 → 빈혈 낮음)",
+  "kchs__DT_H_EX_PHY__SR": "- (중강도 이상 신체활동: 조혈·만성염증 감소; 지구력 운동성 빈혈은 인구 수준에서 작음)",
+  "ext__im_specialists_per100k": "- (내과 전문의 밀도: 빈혈 원인 진단·철분 치료 접근 → 검진에서 잡히는 빈혈 적음)",
+  "chk__수검률": "- (일반검진 수검률: 저위험자까지 수검 → 수검자 중 의심 비율 낮음, 검진 선택 축)"
+ },
+ "evidence": {
+  "ext__basic_livelihood_rate": "kim2022anemia_ses; who2023anaemia",
+  "ext__tertiary_educated_share": "balarajan2011anaemia; kim2022anemia_ses",
+  "ext__nutrition_label_literacy": "kchs_nutrition_label",
+  "eloc__DT_1YL12701__독거노인가구비율＜br＞(A÷B×100)": "guralnik2004elderly_anemia; kim2014elderly_alone_nutrition",
+  "eloc__INH_1BB0002__다문화혼인비중(%)": "kim2016marriage_migrant_anemia; weatherall_thalassaemia_asia",
+  "ext__total_fertility_rate": "milman2011pregnancy_iron; who2023anaemia",
+  "ext__dx_dm_share": "thomas2003diabetes_anemia; stauffer2014ckd_anemia",
+  "kchs__DT_H_SM__SR": "nordenberg1990smoking_hb; cdc1998iron",
+  "kchs__DT_117075_H_DR_HIGH_WH__SR": "ballard1997alcohol_hematology",
+  "kchs__DT_H_EX_WALK__SR": "agarwal2011pa_anemia_elderly",
+  "kchs__DT_H_EX_PHY__SR": "agarwal2011pa_anemia_elderly; mairbaurl2013sports_anemia",
+  "ext__im_specialists_per100k": "basu2019primarycare",
+  "chk__수검률": "yang2013regional"
+ },
+ "rules": {
+  "likelihood": "forced-only 모형 WAIC 낮은 쪽(Poisson/NB)",
+  "set_choice": "WAIC 최소, 4 이내면 변수 적은 세트",
+  "credible": "95% CrI 1 제외",
+  "vif_drop": 10,
+  "multiverse_specs": 200,
+  "years": [
+   2011,
+   2024
+  ],
+  "main_model_note": "주모형 = S1_narrative_full(가설 13 + 강제통제 5). 세트를 다시 바꾸지 않음. VIF>10 유지·보고.",
+  "windows": {
+   "W1_2011-16": [
+    2011,
+    2016
+   ],
+   "W2_2017-24": [
+    2017,
+    2024
+   ]
+  },
+  "windows_note": "전국 성×연령 빈혈 의심률이 2016→2017 55세 이상에서 한 번 낮아짐(남 65-69 3.21→2.52%, 여 65-69 0.96→0.67%; 2012→2013 고령 남성 +20%는 작은 이동). 단절 전·후 창만 사용(20호 교훈). 연도별 전국률로 E를 만들므로 수준 이동은 E가 흡수."
+ },
+ "note": "ANEM = 국가 일반건강검진에서 빈혈증 질환의심(혈색소 기준 미만)으로 판정된 인원, 분모 판정 수검자. 성×15연령 간접표준화(99A2). 결과와 겹치는 검진 지표(정상B 빈혈관리)는 결과 자체라 제외. 신장질환 의심 비율(만성콩팥병 대리)은 같은 검진 판정 체계의 다른 결과라 민감도 전용. 식품안정성 확보율은 시군구별 단일 값(시간 불변)이라 민감도 전용. 사전지정 민감도: E_pop(81 S10)·E_std_age(s8)·80+ 없음(s2)·577 그래프(s577)·2011-16/2017-24 창.",
+ "extra_columns": {
+  "ext__pop80_share": [
+   "ANEM_Estd3.csv",
+   "pop80_share_raw"
+  ],
+  "ext__basic_livelihood_rate": [
+   "EXT_canonical_pool_ANEM_261111.csv",
+   "basic_livelihood_rate"
+  ],
+  "ext__im_specialists_per100k": [
+   "EXT_canonical_pool_ANEM_261111.csv",
+   "im_specialists_per100k"
+  ],
+  "ext__tertiary_educated_share": [
+   "EXT_canonical_pool_ANEM_261111.csv",
+   "tertiary_educated_share"
+  ],
+  "ext__nutrition_label_literacy": [
+   "EXT_canonical_pool_ANEM_261111.csv",
+   "nutrition_label_literacy"
+  ],
+  "ext__food_security_rate": [
+   "EXT_canonical_pool_ANEM_261111.csv",
+   "food_security_rate"
+  ],
+  "ext__unmet_need_rate": [
+   "EXT_canonical_pool_ANEM_261111.csv",
+   "unmet_need_rate"
+  ],
+  "chk__anem_examinees": [
+   "ANEM_Estd3.csv",
+   "examinees"
+  ],
+  "chk__anem_cases": [
+   "ANEM_Estd3.csv",
+   "cases"
+  ],
+  "ext__total_fertility_rate": [
+   "EXT_anem_master_261111.csv",
+   "total_fertility_rate"
+  ],
+  "ext__dx_dm_share": [
+   "EXT_anem_master_261111.csv",
+   "dx_dm_share"
+  ],
+  "ext__kidney_suspect_share": [
+   "EXT_anem_master_261111.csv",
+   "kidney_suspect_share"
+  ]
+ },
+ "pool_note": "수급률 2021-23 양쪽 규칙(20% 미만·5배 초과) 33칸 정정(99c_extra_canonical_pool_anem.py, 00_INDEX 맨 위 절 규칙)."
+}
